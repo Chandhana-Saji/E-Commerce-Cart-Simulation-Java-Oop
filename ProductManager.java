@@ -60,4 +60,8 @@ public class ProductManager {
 
         System.out.println("Product not found.");
     }
+
+public ArrayList<Product> getProducts() {
+    return new ArrayList<>(products);
+}
 }
