@@ -57,4 +57,7 @@ public class Cart {
 
         System.out.println("Final Bill: Rs. " + calculateSubtotal());
     }
+public ArrayList<CartItem> getItems() {
+    return new ArrayList<>(items);
+}
 }
