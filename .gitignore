@@ -11,7 +11,11 @@
 .mtj.tmp/
 
 # Package Files #
+# Ignore jar files by default
 *.jar
+
+# Include the SQLite JDBC driver required by BuyIt
+!lib/sqlite-jdbc-3.53.4.0.jar
 *.war
 *.nar
 *.ear
