@@ -3,139 +3,219 @@ package database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDAO {
 
+    // Retrieve all products for the admin management table.
+    public List<Object[]> getAllProducts() {
+        List<Object[]> products = new ArrayList<Object[]>();
+
+        String sql = "SELECT product_id, name, price, discount, stock, "
+                   + "category, description, image_path "
+                   + "FROM Products ORDER BY product_id";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                products.add(new Object[] {
+                    rs.getInt("product_id"),
+                    rs.getString("name"),
+                    rs.getDouble("price"),
+                    rs.getDouble("discount"),
+                    rs.getInt("stock"),
+                    rs.getString("category"),
+                    rs.getString("description"),
+                    rs.getString("image_path")
+                });
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Could not load products.");
+            e.printStackTrace();
+        }
+
+        return products;
+    }
+
+    // Add a product with all its details.
+    public boolean addProductDetails(
+            int id,
+            String name,
+            double price,
+            double discount,
+            int stock,
+            String category,
+            String description,
+            String imagePath) {
+
+        String sql = "INSERT INTO Products "
+                   + "(product_id, name, price, discount, stock, "
+                   + "category, description, image_path) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.setString(2, name);
+            ps.setDouble(3, price);
+            ps.setDouble(4, discount);
+            ps.setInt(5, stock);
+            ps.setString(6, category);
+            ps.setString(7, description);
+            ps.setString(8, imagePath);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println(
+                "Could not add product: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Update all editable product details.
+    public boolean updateProductDetails(
+            int id,
+            String name,
+            double price,
+            double discount,
+            int stock,
+            String category,
+            String description,
+            String imagePath) {
+
+        String sql = "UPDATE Products SET name = ?, price = ?, "
+                   + "discount = ?, stock = ?, category = ?, "
+                   + "description = ?, image_path = ? "
+                   + "WHERE product_id = ?";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, name);
+            ps.setDouble(2, price);
+            ps.setDouble(3, discount);
+            ps.setInt(4, stock);
+            ps.setString(5, category);
+            ps.setString(6, description);
+            ps.setString(7, imagePath);
+            ps.setInt(8, id);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println(
+                "Could not update product: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Delete a product by ID.
+    public boolean deleteProduct(int id) {
+        String sql = "DELETE FROM Products WHERE product_id = ?";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println(
+                "Could not delete product: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Original method retained for compatibility.
     public boolean addProduct(
-            int productId,
+            int id,
             String name,
             double price,
             double discount,
             int stock) {
 
-        String sql = """
-            INSERT INTO Products
-            (product_id, name, price, discount, stock, category)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """;
+        return addProductDetails(
+            id, name, price, discount, stock,
+            "General", "", "");
+    }
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+    // Display products in the console.
+    public void displayProducts() {
+        for (Object[] p : getAllProducts()) {
+            System.out.println(
+                "Product ID: " + p[0]
+                + "\nName: " + p[1]
+                + "\nPrice: " + p[2]
+                + "\nDiscount: " + p[3] + "%"
+                + "\nStock: " + p[4]
+                + "\n--------------------");
+        }
+    }
 
-            statement.setInt(1, productId);
-            statement.setString(2, name);
-            statement.setDouble(3, price);
-            statement.setDouble(4, discount);
-            statement.setInt(5, stock);
-            statement.setString(6, "General");
+    // Search for a product by ID.
+    public void searchProduct(int id) {
+        String sql = "SELECT * FROM Products WHERE product_id = ?";
 
-            statement.executeUpdate();
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            System.out.println("Product saved to database!");
-            return true;
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println(
+                        "Product ID: " + rs.getInt("product_id"));
+                    System.out.println(
+                        "Name: " + rs.getString("name"));
+                    System.out.println(
+                        "Price: " + rs.getDouble("price"));
+                    System.out.println(
+                        "Discount: " + rs.getDouble("discount") + "%");
+                    System.out.println(
+                        "Stock: " + rs.getInt("stock"));
+                } else {
+                    System.out.println("Product not found.");
+                }
+            }
 
         } catch (SQLException e) {
-            System.out.println("Could not save product.");
+            System.out.println("Product search failed.");
             e.printStackTrace();
-            return false;
         }
     }
-    public void displayProducts() {
 
-    String sql = "SELECT * FROM Products";
+    // Update only price and stock (original method retained).
+    public void updateProduct(int id, double price, int stock) {
+        String sql = "UPDATE Products SET price = ?, stock = ? "
+                   + "WHERE product_id = ?";
 
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql);
-         ResultSet result = statement.executeQuery()) {
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-        while (result.next()) {
-            System.out.println("Product ID: " + result.getInt("product_id"));
-            System.out.println("Name: " + result.getString("name"));
-            System.out.println("Price: " + result.getDouble("price"));
-            System.out.println("Discount: " + result.getDouble("discount") + "%");
-            System.out.println("Stock: " + result.getInt("stock"));
-            System.out.println("--------------------");
-        }
+            ps.setDouble(1, price);
+            ps.setInt(2, stock);
+            ps.setInt(3, id);
 
-    } catch (SQLException e) {
-        System.out.println("Could not display products.");
-        e.printStackTrace();
-    }
-}
-public void searchProduct(int productId) {
+            int rows = ps.executeUpdate();
 
-    String sql = "SELECT * FROM Products WHERE product_id = ?";
-
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
-
-        statement.setInt(1, productId);
-
-        try (ResultSet result = statement.executeQuery()) {
-
-            if (result.next()) {
-                System.out.println("Product ID: " + result.getInt("product_id"));
-                System.out.println("Name: " + result.getString("name"));
-                System.out.println("Price: " + result.getDouble("price"));
-                System.out.println("Discount: " + result.getDouble("discount") + "%");
-                System.out.println("Stock: " + result.getInt("stock"));
+            if (rows > 0) {
+                System.out.println("Product updated successfully!");
             } else {
                 System.out.println("Product not found.");
             }
+
+        } catch (SQLException e) {
+            System.out.println("Product update failed.");
+            e.printStackTrace();
         }
-
-    } catch (SQLException e) {
-        System.out.println("Product search failed!");
-        e.printStackTrace();
     }
-}
-public void updateProduct(int productId, double price, int stock) {
-
-    String sql = "UPDATE Products SET price = ?, stock = ? WHERE product_id = ?";
-
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
-
-        statement.setDouble(1, price);
-        statement.setInt(2, stock);
-        statement.setInt(3, productId);
-
-        int rows = statement.executeUpdate();
-
-        if (rows > 0) {
-            System.out.println("Product updated successfully!");
-        } else {
-            System.out.println("Product not found.");
-        }
-
-    } catch (SQLException e) {
-        System.out.println("Product update failed!");
-        e.printStackTrace();
-    }
-}
-public void deleteProduct(int productId) {
-
-    String sql = "DELETE FROM Products WHERE product_id = ?";
-
-    try (Connection connection = DatabaseConnection.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
-
-        statement.setInt(1, productId);
-
-        int rows = statement.executeUpdate();
-
-        if (rows > 0) {
-            System.out.println("Product deleted successfully!");
-        } else {
-            System.out.println("Product not found.");
-        }
-
-    } catch (SQLException e) {
-        System.out.println("Product deletion failed!");
-        e.printStackTrace();
-    }
-}
 }

@@ -4,6 +4,8 @@ package database.gui;
 import database.CustomerDAO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoginFrame extends JFrame {
 
@@ -11,13 +13,15 @@ public class LoginFrame extends JFrame {
     private JPasswordField passwordField;
 
     public LoginFrame() {
-        setTitle("E-Commerce Cart - Login");
+        setTitle("BuyIt - Customer Login");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        panel.setBorder(
+            BorderFactory.createEmptyBorder(25, 25, 25, 25)
+        );
 
         JLabel titleLabel = new JLabel("Customer Login");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -39,11 +43,17 @@ public class LoginFrame extends JFrame {
 
         add(panel);
 
-        loginButton.addActionListener(e -> loginCustomer());
+        loginButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                loginCustomer();
+            }
+        });
 
-        registerButton.addActionListener(e -> {
-            new RegisterFrame();
-            dispose();
+        registerButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new RegisterFrame();
+                dispose();
+            }
         });
 
         setVisible(true);
@@ -51,11 +61,13 @@ public class LoginFrame extends JFrame {
 
     private void loginCustomer() {
         String email = emailField.getText().trim();
-        String password = new String(passwordField.getPassword());
+        String password =
+            new String(passwordField.getPassword());
 
         if (email.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(
-                    this, "Please enter email and password.");
+                this, "Please enter email and password."
+            );
             return;
         }
 
@@ -63,16 +75,24 @@ public class LoginFrame extends JFrame {
         int customerId = dao.getCustomerId(email, password);
 
         if (customerId != -1) {
-            JOptionPane.showMessageDialog(this, "Login successful!");
-            new ProductFrame(customerId);
+            JOptionPane.showMessageDialog(
+                this, "Login successful!"
+            );
+
+            new CategoryFrame(customerId);
             dispose();
         } else {
             JOptionPane.showMessageDialog(
-                    this, "Invalid email or password.");
+                this, "Invalid email or password."
+            );
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(LoginFrame::new);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new LoginFrame();
+            }
+        });
     }
 }
