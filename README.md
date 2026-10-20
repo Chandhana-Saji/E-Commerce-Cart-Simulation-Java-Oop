@@ -3,26 +3,53 @@
 A Java-based desktop application developed as an Object-Oriented Programming (OOP) group project.
 
 ## Project Overview
-The application simulates a basic e-commerce shopping experience, allowing users to browse products, manage a shopping cart, apply discounts, and place orders.
 
-## Planned Technologies
-- **Language:** Java
-- **GUI:** Java Swing
-- **Database:** SQLite
-- **Database Connectivity:** JDBC
-- **Build Tool:** Apache Maven with Maven Wrapper
-- **Version Control:** Git and GitHub
+The application simulates a basic e-commerce shopping experience. Users can log in, browse available products, add products to a shopping cart, calculate discounted prices, and place orders.
 
-## Planned OOP Concepts
-- Classes and objects
-- Encapsulation
-- Inheritance
-- Polymorphism
-- Abstraction
-- Exception handling
+## Technologies Used
+
+Language: Java
+GUI: Java Swing
+Database: SQLite
+Database Connectivity: JDBC
+Version Control: Git and GitHub
+IDE: Visual Studio Code
+
+## OOP Concepts
+
+The project demonstrates the following Object-Oriented Programming concepts:
+
+ Classes and Objects
+ Encapsulation
+ Inheritance
+ Polymorphism
+ Abstraction
+ Exception Handling
+
+## Features
+
+ Customer login
+ Display available products
+ Shopping cart management
+ Add products with quantity selection
+ Remove products from the cart
+ Calculate prices with discounts
+ Calculate the total order amount
+ Checkout and order placement
+ Update product stock after a successful order
+ Store order details in the SQLite database
+
+## Database
+
+The application uses SQLite to store and manage customer, product, order, and order-item information. JDBC is used to connect the Java application to the database.
 
 ## Team
+
 Four-member student project team.
 
 ## Project Status
-Initial setup and planning.
+
+Development and testing in progress.
+
+The login system, product display, and shopping cart interface have been implemented and tested. Checkout and database operations are being tested as part of the ongoing development.
+
