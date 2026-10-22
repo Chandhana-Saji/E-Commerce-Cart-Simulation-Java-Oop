@@ -1,48 +1,79 @@
-# E-Commerce Cart Simulation
+# BuyIt – E-Commerce Cart Simulation
 
-A Java-based desktop application developed as an Object-Oriented Programming (OOP) group project.
+A Java desktop e-commerce application developed as an Object-Oriented Programming (OOP) group project. The current application uses Java Swing for its graphical interface and SQLite for data storage.
 
-## Project Overview
+## Current Application
 
-The application simulates a basic e-commerce shopping experience. Users can log in, browse available products, add products to a shopping cart, calculate discounted prices, and place orders.
+**The current application entry point is `BuyItApp.java`.**
 
-## Technologies Used
+Running this class launches `database.gui.HomeFrame`, which opens the application's current GUI.
 
-- Language:Java
-- GUI:Java Swing
-- Database:SQLite
-- Database Connectivity: JDBC
-- Version Control: Git and GitHub
-- IDE: Visual Studio Code
-
-## OOP Concepts
-
-The project demonstrates the following Object-Oriented Programming concepts:
-
-- Classes and Objects
-- Encapsulation
-- Inheritance
-- Polymorphism
-- Abstraction
-- Exception Handling
+> **Important:** `Main.java` and `MainFrame.java` belong to an earlier version of the project. They are retained as legacy code and are not the entry point for the current application.
 
 ## Features
 
-- Customer login
-- Display available products
-- Shopping cart management
-- Add products with quantity selection
-- Remove products from the cart
-- Calculate prices with discounts
-- Calculate the total order amount
-- Checkout and order placement
-- Update product stock after a successful order
-- Store order details in the SQLite database
+### Customer
+- Customer registration and login
+- Browse products by category
+- View product listings and prices
+- Add and remove products from the shopping cart
+- Calculate discounts and order totals
+- Checkout and place orders
+
+### Administrator
+- Admin login
+- Manage products
+- View customer orders
+
+## Technologies
+
+- Java
+- Java Swing
+- SQLite
+- JDBC (SQLite JDBC driver)
+- Git and GitHub
+- Visual Studio Code
+
+## OOP Concepts
+
+- Classes and objects
+- Encapsulation
+- Inheritance
+- Abstraction
+- Polymorphism, where applicable
+- Exception handling
+
+## Project Structure
+
+- `BuyItApp.java` – entry point for the current GUI application
+- `database/` – database connection, setup, and data-access classes
+- `database/gui/` – customer and administrator GUI screens
+- `Product.java` – common product model
+- `Clothing.java`, `Footwear.java`, `Gadget.java` – product subclasses
+- `Images/` – product images used by the interface
+- `lib/` – SQLite JDBC driver
+- `Main.java`, `MainFrame.java` – legacy application code from an earlier version
+
+## Requirements
+
+- A compatible JDK
+- SQLite JDBC driver included in the classpath
+- The project's SQLite database and database setup code
+
+## How to Run
+
+1. Clone or download the repository.
+2. Open the project in a Java IDE such as VS Code.
+3. Ensure the SQLite JDBC driver in `lib/` is configured on the project's classpath.
+4. Check the database setup and connection configuration.
+5. Run **`BuyItApp.java`** to launch the current GUI.
+
+The exact terminal command depends on the project's classpath and compilation setup. Use the configured IDE launch settings or compile the required source files with the SQLite JDBC driver available.
 
 ## Database
 
-The application uses SQLite to store and manage customer, product, order, and order-item information. JDBC is used to connect the Java application to the database.
+SQLite stores the application's supported customer, product, and order data. Database operations are handled by classes in the `database/` directory.
 
 ## Team
 
-Four-member student project team.
+Four-member student OOP project team.
