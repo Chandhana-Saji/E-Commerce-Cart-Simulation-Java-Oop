@@ -10,7 +10,6 @@ The application simulates a basic e-commerce shopping experience, allowing users
 - **GUI:** Java Swing
 - **Database:** SQLite
 - **Database Connectivity:** JDBC
-- **Build Tool:** Apache Maven with Maven Wrapper
 - **Version Control:** Git and GitHub
 
 ## Planned OOP Concepts
